@@ -27,23 +27,14 @@ pipeline {
             }
         }
         stage('Deploy to K8s') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
-        stage('List pods') {
             steps{
                 withKubeConfig([credentialsId: 'minikube-auth-token',
                                 serverUrl: 'https://192.168.99.101:8443',
                                 namespace: 'default'
                                ]) {
-                sh 'kubectl get pods'
-              }
+                    sh 'kubectl set image deployment/django django=dockerImage --record'
+                }
             }
         }
     }
-
-
-
-
 }
