@@ -7,7 +7,7 @@ WORKDIR /code
 # copy project
 COPY . /code/
 
-RUN rm .env
+RUN rm -f .env
 RUN mkdir -p /code/static
 
 RUN apk add --no-cache postgresql-libs && \
