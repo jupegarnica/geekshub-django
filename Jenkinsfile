@@ -31,8 +31,6 @@ pipeline {
                 echo 'Deploying....'
             }
         }
-    }
-    node {
         stage('List pods') {
             withKubeConfig([credentialsId: 'minikube-auth-token',
                             serverUrl: '192.168.99.101',
@@ -42,5 +40,8 @@ pipeline {
             }
         }
     }
+
+
+
 
 }
