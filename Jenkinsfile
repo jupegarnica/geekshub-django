@@ -34,7 +34,7 @@ pipeline {
         stage('List pods') {
             steps{
                 withKubeConfig([credentialsId: 'minikube-auth-token',
-                                serverUrl: '192.168.99.101:8443',
+                                serverUrl: 'https://192.168.99.101:8443',
                                 namespace: 'default'
                                ]) {
                 sh 'kubectl get pods'
