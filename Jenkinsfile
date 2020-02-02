@@ -32,7 +32,7 @@ pipeline {
                                 serverUrl: 'https://192.168.99.101:8443',
                                 namespace: 'default'
                                ]) {
-                    sh 'kubectl set image deployment/django django=dockerImage --record'
+                    sh 'kubectl set image deployment/django django=registry + ":$BUILD_NUMBER" --record'
                 }
             }
         }
