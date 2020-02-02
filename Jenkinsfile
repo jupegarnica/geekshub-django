@@ -10,10 +10,11 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Build and publish') {
+        stage('Build image') {
             steps {
-                echo 'Building..'
-                docker.build registry + ":$BUILD_NUMBER"
+                script {
+                    docker.build registry + ":$BUILD_NUMBER"
+                }
             }
         }
         stage('Deploy to K8s') {
