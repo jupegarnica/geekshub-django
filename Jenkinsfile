@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    triggers {
+        pollSCM('')
+    }
     environment {
         registry = "escarti/geekshub-django"
         registryCredential = 'docker-registry'
