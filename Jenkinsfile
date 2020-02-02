@@ -32,11 +32,13 @@ pipeline {
             }
         }
         stage('List pods') {
-            withKubeConfig([credentialsId: 'minikube-auth-token',
-                            serverUrl: '192.168.99.101',
-                            namespace: 'default'
-                            ]) {
-              sh 'kubectl get pods'
+            steps{
+                withKubeConfig([credentialsId: 'minikube-auth-token',
+                                serverUrl: '192.168.99.101',
+                                namespace: 'default'
+                               ]) {
+                sh 'kubectl get pods'
+              }
             }
         }
     }
