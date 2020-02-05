@@ -1,7 +1,7 @@
 pipeline {
     agent any
     triggers {
-        pollSCM('')
+        pollSCM('* * * * */1')
     }
     environment {
         registry = "escarti/geekshub-django"
