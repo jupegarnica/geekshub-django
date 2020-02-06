@@ -16,7 +16,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$GIT_BRANCH_$BUILD_NUMBER","--network host .")
+                    dockerImage = docker.build(registry + ":$GIT_BRANCH" + "_$BUILD_NUMBER","--network host .")
                 }
             }
         }
