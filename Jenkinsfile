@@ -16,7 +16,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$BUILD_NUMBER","--network host .")
+                    dockerImage = docker.build(registry + ":$GIT_BRANCH_$BUILD_NUMBER","--network host .")
                 }
             }
         }
@@ -30,6 +30,9 @@ pipeline {
             }
         }
         stage('Deploy to K8s') {
+            when {
+                expression { env.GIT_BRANCH == 'develop' }
+            }
             steps{
                 withKubeConfig([credentialsId: 'minikube-auth-token',
                                 serverUrl: 'https://192.168.99.101:8443',
