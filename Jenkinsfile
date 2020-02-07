@@ -6,6 +6,9 @@ pipeline {
     environment {
         registry = "escarti/geekshub-django"
         registryCredential = 'docker-registry'
+        apiServer = "https://192.168.99.101:8443"
+        devNamespace = "default"
+        minikubeCredential = 'minikube-auth-token'
     }
     stages {
         stage('Test') {
@@ -34,9 +37,9 @@ pipeline {
                 expression { env.GIT_BRANCH == 'develop' }
             }
             steps{
-                withKubeConfig([credentialsId: 'minikube-auth-token',
-                                serverUrl: 'https://192.168.99.101:8443',
-                                namespace: 'default'
+                withKubeConfig([credentialsId: minikubeCredential,
+                                serverUrl: apiServer,
+                                namespace: devNamespace
                                ]) {
                     sh 'kubectl set image deployment/django django="$registry:$BUILD_NUMBER" --record'
                 }
