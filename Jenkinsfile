@@ -52,11 +52,8 @@ pipeline {
                         sh "git add ."
                         sh "git commit -m\"Patched deployment for $imageTag\""
 
-                        withCredentials([usernamePassword(credentialsId: 'Git', usernameVariable: 'username', passwordVariable: 'password')]){
-                            script {
-                                env.encodedPass=URLEncoder.encode(password, "UTF-8")
-                            }
-                            sh "git push https://$username:$encodedPass@github.com/escarti/geekshub-django-deployment.git"
+                        withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                            sh "git push https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
                         }
                     }
                 }
