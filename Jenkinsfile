@@ -42,10 +42,10 @@ pipeline {
             }
             steps{
                 script {
-                    dir('deployment') {
-                        withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
-                            sh "rm -rf ."
-                            sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git ."
+                    withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                        sh "rm -rf geekshub-django-deployment"
+                        sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git ."
+                        dir("geekshub-django-deployment") {
                             sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
                             sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
                             sh "mv new-deploy.yaml django-deployment.yaml"
@@ -67,7 +67,7 @@ pipeline {
                                 serverUrl: apiServer,
                                 namespace: devNamespace
                                ]) {
-                    sh 'kubectl apply -f deployment/django-deployment.yaml'
+                    sh 'kubectl apply -f geekshub-django-deployment/django-deployment.yaml'
                 }
             }
         }
