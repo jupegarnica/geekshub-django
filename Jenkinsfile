@@ -44,6 +44,7 @@ pipeline {
                 script {
                     dir('deployment') {
                         withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                            sh "rm -rf geekshub-django-deployment"
                             sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
                             sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
                             sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
