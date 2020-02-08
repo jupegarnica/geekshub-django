@@ -10,6 +10,7 @@ pipeline {
         devNamespace = "default"
         minikubeCredential = 'minikube-auth-token'
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
+        developDeployRepo = "https://github.com/escarti/geekshub-django-deployment.git"
     }
     stages {
         stage('Test') {
@@ -42,7 +43,7 @@ pipeline {
                     dir('deployment') {
                         git branch: 'master',
                         credentialsId: 'Git',
-                        url: 'https://github.com/escarti/geekshub-django-deployment.git'
+                        url: developDeployRepo
 
                         sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
                         sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
