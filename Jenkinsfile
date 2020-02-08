@@ -13,7 +13,6 @@ pipeline {
         devNamespace = "default"
         minikubeCredential = 'minikube-auth-token'
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
-        developDeployRepo = "https://github.com/escarti/geekshub-django-deployment.git"
     }
     stages {
         stage('Test') {
