@@ -34,6 +34,9 @@ pipeline {
             }
         }
         stage('Update deployment file') {
+            when {
+                expression { env.GIT_BRANCH == 'develop' }
+            }
             steps{
                 script {
                     dir('deployment') {
