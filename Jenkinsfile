@@ -44,18 +44,14 @@ pipeline {
             steps{
                 script {
                     dir('deployment') {
-                        git branch: 'master',
-                        credentialsId: 'Git',
-                        url: developDeployRepo
-
-                        sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
-                        sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
-                        sh "mv new-deploy.yaml django-deployment.yaml"
-                        sh "rm patch.yaml"
-                        sh "git add ."
-                        sh "git commit -m\"Patched deployment for $imageTag\""
-
                         withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                            sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
+                            sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
+                            sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
+                            sh "mv new-deploy.yaml django-deployment.yaml"
+                            sh "rm patch.yaml"
+                            sh "git add ."
+                            sh "git commit -m\"Patched deployment for $imageTag\""
                             sh "git push https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
                         }
                     }
