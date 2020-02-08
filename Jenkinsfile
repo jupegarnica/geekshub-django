@@ -9,6 +9,7 @@ pipeline {
         apiServer = "https://192.168.99.101:8443"
         devNamespace = "default"
         minikubeCredential = 'minikube-auth-token'
+        imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
     }
     stages {
         stage('Test') {
@@ -19,11 +20,11 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$GIT_BRANCH" + "_$BUILD_NUMBER","--network host .")
+                    dockerImage = docker.build(registry + ":$imageTag","--network host .")
                 }
             }
         }
-        stage('Deploy Image') {
+        stage('Upload to registry') {
             steps{
                 script {
                     docker.withRegistry( '', registryCredential ) {
@@ -41,7 +42,7 @@ pipeline {
                                 serverUrl: apiServer,
                                 namespace: devNamespace
                                ]) {
-                    sh 'kubectl set image deployment/django django="$registry:$BUILD_NUMBER" --record'
+                    sh 'kubectl set image deployment/django django="$registry:$imageTag" --record'
                 }
             }
         }
