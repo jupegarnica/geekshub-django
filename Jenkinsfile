@@ -3,6 +3,9 @@ pipeline {
     triggers {
         pollSCM('* * * * */1')
     }
+     options {
+        disableConcurrentBuilds()
+    }
     environment {
         registry = "escarti/geekshub-django"
         registryCredential = 'docker-registry'
