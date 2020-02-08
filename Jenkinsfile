@@ -33,6 +33,23 @@ pipeline {
                 }
             }
         }
+        stage('Update deployment file') {
+            steps{
+                script {
+                    git branch: 'master',
+                    credentialsId: 'Git',
+                    url: 'https://github.com/escarti/geekshub-django-deployment.git'
+
+                    sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
+                    sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
+                    sh "mv new-deploy.yaml django-deployment.yaml"
+                    sh "rm patch.yaml"
+                    sh "git add ."
+                    sh "git commit -m\"Patched deployment for $imageTag\""
+                    sh "git push origin master"
+                }
+            }
+        }
         stage('Deploy to K8s') {
             when {
                 expression { env.GIT_BRANCH == 'develop' }
@@ -42,7 +59,7 @@ pipeline {
                                 serverUrl: apiServer,
                                 namespace: devNamespace
                                ]) {
-                    sh 'kubectl set image deployment/django django="$registry:$imageTag" --record'
+                    sh 'kubectl apply -f django-deployment.yaml'
                 }
             }
         }
