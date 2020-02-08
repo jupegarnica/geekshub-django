@@ -46,7 +46,7 @@ pipeline {
                         sh "rm -rf geekshub-django-deployment"
                         sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
                         dir("geekshub-django-deployment") {
-                            sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: $imageTag\" > patch.yaml"
+                            sh "echo \"spec:\n  template:\n    spec:\n      containers:\n        - name: django\n          image: ${registry}:$imageTag\" > patch.yaml"
                             sh "kubectl patch --local -o yaml -f django-deployment.yaml -p \"\$(cat patch.yaml)\" > new-deploy.yaml"
                             sh "mv new-deploy.yaml django-deployment.yaml"
                             sh "rm patch.yaml"
