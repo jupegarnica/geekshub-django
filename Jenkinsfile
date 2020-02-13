@@ -15,16 +15,16 @@ pipeline {
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
     }
     stages {
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
         stage('Build image') {
             steps {
                 script {
                     dockerImage = docker.build(registry + ":$imageTag","--network host .")
                 }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
             }
         }
         stage('Upload to registry') {
