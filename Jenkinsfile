@@ -1,6 +1,7 @@
 pipeline {
     agent any
     triggers {
+        /* Vamos a pullear el repo activamente porque en nuestra instalación local sería complicado usar Webhooks */
         pollSCM('* * * * */1')
     }
      options {
@@ -8,7 +9,7 @@ pipeline {
     }
     environment {
         registry = "escarti/geekshub-django"
-        registryCredential = 'docker-registry'
+        registryCredential = 'Docker'
         apiServer = "https://192.168.99.101:8443"
         devNamespace = "default"
         minikubeCredential = 'minikube-auth-token'
