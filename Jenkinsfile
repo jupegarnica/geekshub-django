@@ -19,7 +19,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$imageTag", "--network host .")
+                    dockerImage = docker.build(registry + ":$imageTag", "--cache-from $registry:latest --network host .")
                 }
             }
         }
@@ -33,6 +33,7 @@ pipeline {
                 script {
                     docker.withRegistry('', registryCredential ) {
                         dockerImage.push()
+                        dockerImage.push('latest')
                     }
                 }
             }
