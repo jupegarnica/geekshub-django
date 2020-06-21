@@ -19,7 +19,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$imageTag")
+                    dockerImage = docker.build(registry + ":$imageTag", "--network host .")
                 }
             }
         }
