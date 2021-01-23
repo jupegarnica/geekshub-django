@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh "docker-compose -f docker-compose_test.yaml up -e IMAGE=$registry -e TAG=$imageTag --abort-on-container-exit --exit-code-from webapp"
+                sh "IMAGE=$registry TAG=$imageTag docker-compose -f docker-compose_test.yaml up --abort-on-container-exit --exit-code-from webapp"
             }
         }     
         stage('Upload image to registry') {
