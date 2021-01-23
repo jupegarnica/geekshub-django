@@ -14,12 +14,7 @@ pipeline {
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
 
     }
-    stages {
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }        
+    stages {   
         stage('Build image') {
             steps {
                 script {
@@ -27,6 +22,11 @@ pipeline {
                 }
             }
         }
+        stage('Test') {
+            steps {
+                sh 'docker-compose -f docker-compose_test.yaml up --abort-on-container-exit --exit-code-from webapp'
+            }
+        }     
         stage('Upload image to registry') {
             steps{
                 script {
