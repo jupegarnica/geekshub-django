@@ -12,6 +12,9 @@ pipeline {
         registry = "escarti/geekshub-django" /* Usad vuestro docker-hub registry */
         registryCredential = 'Docker'
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
+        apiServer = "https://192.168.99.101:8443"
+        devNamespace = "default"
+        minikubeCredential = 'minikube-auth-token'
 
     }
     stages {   
@@ -34,6 +37,16 @@ pipeline {
                         dockerImage.push()
                         dockerImage.push('latest')
                     }
+                }
+            }
+        }
+        stage('Deploy to K8s') {
+            steps{
+                withKubeConfig([credentialsId: minikubeCredential,
+                                serverUrl: apiServer,
+                                namespace: devNamespace
+                               ]) {
+                    sh 'kubectl set image deployment/django django="$registry:$imageTag" --record'
                 }
             }
         }

@@ -13,6 +13,6 @@ class ChoiceTestCase(TestCase):
 
         for question in questions_query.iterator():
             num_choices = len(ChoiceNumber.objects.all())
-            self.assertLess(num_choices,2)
+            self.assertLess(num_choices,4)
 
 
