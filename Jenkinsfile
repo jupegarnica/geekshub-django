@@ -47,6 +47,7 @@ pipeline {
             steps{
                 script {
                     withCredentials([usernamePassword(credentialsId: 'GitHub-encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                        sh "git clone https://$username:$password@github.com/$username/$deploymentRepo.git"
                         sh "rm -rf $deploymentRepo"
                         sh "git clone https://$username:$password@github.com/$username/$deploymentRepo.git"
                         dir("$deploymentRepo") {
