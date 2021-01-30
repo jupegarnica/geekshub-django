@@ -9,12 +9,12 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        registry = "escarti/geekshub-django" /* Usad vuestro docker-hub registry */
+        registry = "jupegarnica/geekshub-django" /* Usad vuestro docker-hub registry */
         registryCredential = 'Docker'
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
 
     }
-    stages {      
+    stages {
         stage('Build image') {
             steps {
                 script {
