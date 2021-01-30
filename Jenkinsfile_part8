@@ -9,7 +9,7 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        registry = "escarti/geekshub-django" /* Usad vuestro docker-hub registry */
+        registry = "jupegarnica/geekshub-django" /* Usad vuestro docker-hub registry */
         registryCredential = 'Docker'
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
         apiServer = "https://192.168.99.101:8443"
@@ -17,7 +17,7 @@ pipeline {
         minikubeCredential = 'minikube-auth-token'
         deploymentRepo = "geekshub-django-deployment"
     }
-    stages { 
+    stages {
         stage('Build image') {
             steps {
                 script {
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh "IMAGE=$registry TAG=$imageTag docker-compose -f docker-compose_test.yaml up --abort-on-container-exit --exit-code-from webapp"
             }
-        }     
+        }
         stage('Upload image to registry') {
             steps{
                 script {
@@ -61,7 +61,7 @@ pipeline {
                     }
                 }
             }
-        } 
+        }
         stage('Deploy to K8s') {
             when {
                 expression { env.GIT_BRANCH == 'develop' }
